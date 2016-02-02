@@ -21,18 +21,23 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener{
     private RadioGroup gruposexo, grupoformula;//elementos para los grupos de tipo de sexo/formula
     private RelativeLayout layoutAnimadouno, layoutAnimadodos;// permiten agrupar  separadamente los elementos segun sea por formula o por ajuste manual
     private Spinner selector; //elemento que permite almacenar en forma de lista preguntas
     private TabHost TbH;//elemento que permite generar las pestañas
     private EditText txtfecha, txtnombreu, txtcontra, txtcontrados, txtnombre, txtapellido, txtrespuesta;//elementos que hacen referencia a los datos necesarios del usuario
+    private SeekBar barra, barra2;//elementos que permite seleccionar la formula(numero) de cada ojo
+    private TextView iz,de;//elementos que llevaran el valor de formula del ojo izquierdo y  del ojo derecho
+    private EditText texto;
     String[] opciones = {"Seleccione una pregunta", "¿Nombre de tu mascota preferida?", "¿Lugar de nacimiento de tu padre?", "¿Cancion favorita?", "¿Mejor amigo?"};
     //vector que almacena cada una de las preguntas separadamente
     @Override
@@ -42,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//funcion hacia atras
         pestanias();
         referenciasuno();
+        referenciasdos();
         abrir();
     }
 
@@ -60,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * este metodo se encarga de referencias los elementos creados con los elementos que hay en el XML, esto con el fin de
-     * poder hacer cambios en dichos elementos
+     * este metodo se encarga de referenciar los elementos creados globalmente con los elementos que hay en el XML en la primera pestaña
+     *  esto con el fin de poder hacer cambios en dichos elementos
      */
     public void referenciasuno() {
         layoutAnimadodos = (RelativeLayout) findViewById(R.id.dinamico2);
@@ -81,7 +87,56 @@ public class MainActivity extends AppCompatActivity {
         selector.setAdapter(adapter);
 
     }
+    /**
+     * este metodo se encarga de referenciar los elementos creados globalmente con los elementos que hay en el XML en la segunda pestaña
+     *  esto con el fin de poder hacer cambios en dichos elementos
+     */
+    public void referenciasdos(){
+        barra = (SeekBar)findViewById(R.id.barra);
+        barra.setOnSeekBarChangeListener(this);
+        barra2 = (SeekBar)findViewById(R.id.barra2);
+        barra2.setOnSeekBarChangeListener (this);
+        iz = (TextView)findViewById(R.id.lblizq);
+        de = (TextView)findViewById(R.id.lblder);
+        texto = (EditText)findViewById(R.id.txttexto2);
+    }
 
+    /**
+     * metodo que ajusta el progreso de las barras.
+     * @param seekBar
+     * @param progress
+     * @param fromUser
+     */
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if(seekBar.equals(barra))
+            iz.setText(""+progress);
+        if(seekBar.equals(barra2))
+            de.setText(""+progress);
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    public void mas(View v){
+        barra.setProgress(barra.getProgress() + 1);
+    }
+    public void menos(View v){
+        barra.setProgress(barra.getProgress() - 1);
+    }
+    public  void mas2(View v){
+        barra2.setProgress(barra2.getProgress() + 1);
+    }
+    public  void menos2(View v){
+        barra2.setProgress(barra2.getProgress() - 1);
+    }
     /**
      * metodo  que permite automaticamente abrir un dialogo que permite selecionar fechas.
      */
@@ -125,6 +180,8 @@ public class MainActivity extends AppCompatActivity {
      */
 
     public void continuar(View v) {
+
+
         int p = espaciosblancos();
         int r = 0, r2 = 0, r3 = 0;
         if (p == 1) {
@@ -136,13 +193,13 @@ public class MainActivity extends AppCompatActivity {
                 // r3=verificarUsuario(); aqui ira el codigo o funcion que determina si el usuario ingresado  ya esta creado
                 r3 = 1;
             }
+            if (layoutAnimadouno.getVisibility() == View.GONE)
+                layoutAnimadouno.setVisibility(View.VISIBLE);//linea que muestra el layuot junto a todos sus elementos
+            if (layoutAnimadodos.getVisibility() == View.VISIBLE)
+                layoutAnimadodos.setVisibility(View.GONE);//metodo que oculpa el layout junto con todos sus elementos
         }
         if (r == 1 && r2 == 1 && r3 == 1 && p == 1) {
             if (grupoformula.getCheckedRadioButtonId() == R.id.radiosiR1) {
-                if (layoutAnimadouno.getVisibility() == View.GONE)
-                    layoutAnimadouno.setVisibility(View.VISIBLE);//linea que muestra el layuot junto a todos sus elementos
-                if (layoutAnimadodos.getVisibility() == View.VISIBLE)
-                    layoutAnimadodos.setVisibility(View.GONE);//metodo que oculpa el layout junto con todos sus elementos
 
             } else {
                 if (layoutAnimadodos.getVisibility() == View.GONE)
@@ -268,6 +325,16 @@ public class MainActivity extends AppCompatActivity {
         else
             return 1;//retorna uno  si el parametro  no comienza con un espacio
    }
+
+    public void masET(View v){
+        float t= texto.getTextSize();
+        texto.setTextSize(t+10);
+    }
+
+    public void menosET(View v){
+        float t= texto.getTextSize();
+        texto.setTextSize(t-2);
+    }
 
 
 }
