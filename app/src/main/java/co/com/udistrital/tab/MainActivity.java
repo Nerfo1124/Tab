@@ -19,11 +19,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     private SeekBar barra, barra2;//elementos que permite seleccionar la formula(numero) de cada ojo
     private TextView iz,de;//elementos que llevaran el valor de formula del ojo izquierdo y  del ojo derecho
     private EditText texto;
+    private NumberPicker fre;//elemento que permite selecionar el numero de horas para la frecuencia de tiempo
     String[] opciones = {"Seleccione una pregunta", "¿Nombre de tu mascota preferida?", "¿Lugar de nacimiento de tu padre?", "¿Cancion favorita?", "¿Mejor amigo?"};
     //vector que almacena cada una de las preguntas separadamente
     @Override
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         pestanias();
         referenciasuno();
         referenciasdos();
+        referenciastres();
         abrir();
     }
 
@@ -99,6 +103,13 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         iz = (TextView)findViewById(R.id.lblizq);
         de = (TextView)findViewById(R.id.lblder);
         texto = (EditText)findViewById(R.id.txttexto2);
+    }
+
+    public void referenciastres(){
+        fre= (NumberPicker)findViewById(R.id.numero);
+        fre.setMaxValue(24);
+        fre.setMinValue(1);
+        fre.setWrapSelectorWheel(false);
     }
 
     /**
@@ -180,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
      */
 
     public void continuar(View v) {
-
 
         int p = espaciosblancos();
         int r = 0, r2 = 0, r3 = 0;
@@ -326,11 +336,21 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
             return 1;//retorna uno  si el parametro  no comienza con un espacio
    }
 
+    /**
+     * este metodo hace referencia a un jbutton encargado de aumentar el tamaño de la letra del texto
+     * ubicado en la segunga pestaña en la opcion de ajuste manual
+     * @param v
+     */
     public void masET(View v){
         float t= texto.getTextSize();
-        texto.setTextSize(t+10);
+        texto.setTextSize(t+4);
     }
 
+    /**
+     * este metodo hace referencia a un jbutton encargado de disminuir el tamaño de la letra del texto
+     * ubicado en la segunga pestaña en la opcion de ajuste manual
+     * @param v
+     */
     public void menosET(View v){
         float t= texto.getTextSize();
         texto.setTextSize(t-2);
